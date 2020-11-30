@@ -3,7 +3,7 @@ from official.nlp import bert
 import official.nlp.bert.tokenization
 
 ################################################################################### MODEL
-bert_folder = 'uncased_L-12_H-768_A-12'
+bert_folder = '../uncased_L-12_H-768_A-12'
 epochs = 3
 batch_size = 32
 eval_batch_size = 32

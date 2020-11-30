@@ -8,7 +8,6 @@ import tensorflow as tf
 from official import nlp
 from official.nlp import bert
 
-# Load the required submodules
 import official.nlp.optimization
 import official.nlp.bert.bert_models
 import official.nlp.bert.configs
@@ -42,6 +41,8 @@ def test_model(classifier):
 def bert_model():
     test, test_labels, train, train_labels, validation, validation_labels = datagen.prepare_data()
 
+    print(type(train_labels))
+
     bert_config_file = os.path.join(config.bert_folder, "bert_config.json")
     config_dict = json.loads(tf.io.gfile.GFile(bert_config_file).read())
 
@@ -66,14 +67,22 @@ def bert_model():
     metrics = [tf.keras.metrics.SparseCategoricalAccuracy('accuracy', dtype=tf.float32)]
     loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 
-
+    """
+    print(train_labels.items())
+    count = 0
+    for key, value in train_labels.items():
+        print(type(value))
+        count += 1
+        if count == 10:
+            break
+    """
     bert_classifier.compile(
         optimizer=optimizer,
         loss=loss,
         metrics=metrics)
 
-    # weird behavoir here (tensorflow.python.framework.errors_impl.UnimplementedError:  Cast string to float is not supported
-    #          [[node sparse_categorical_crossentropy/Cast (defined at /home/ebt/TESI/bert_nlp/model.py:103) ]] [Op:__inference_train_function_23235])
+    # weird behavior here: tensorflow.python.framework.errors_impl.UnimplementedError:  Cast string to float is not supported
+    #          [[node sparse_categorical_crossentropy/Cast (defined at /home/ebt/TESI/bert_nlp/model.py:79) ]] [Op:__inference_train_function_23235]
     bert_classifier.fit(
         train, train_labels,
         validation_data=(validation, validation_labels),
@@ -84,3 +93,5 @@ def bert_model():
     save_model(bert_classifier)
     # only for dev purposes
     test_model(bert_classifier)
+    
+

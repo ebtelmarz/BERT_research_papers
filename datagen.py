@@ -203,19 +203,21 @@ def prepare_data():
     dev_df = pd.read_csv(config.dev_path)
     test_df = pd.read_csv(config.test_path)
 
+    print(train_df.head(1))
     # Set up tokenizer to generate Tensorflow dataset
     tokenizer = config.tokenizer
 
     tokenizer.convert_tokens_to_ids(['[CLS]', '[SEP]'])
 
     train = bert_encode(train_df, tokenizer)
-    train_labels = train_df['score']
+    train_labels_df = train_df['score'].map(lambda x: x[0].isdigit())
+    train_labels = train_labels_df.astype('int64')
 
     validation = bert_encode(dev_df, tokenizer)
-    validation_labels = dev_df['score']
+    validation_labels = dev_df['score'].astype('int64')
 
     test = bert_encode(test_df, tokenizer)
-    test_labels = test_df['score']
+    test_labels = test_df['score'].astype('int64')
 
     for key, value in test.items():
         print(f'{key:15s} shape: {value.shape}')
