@@ -98,7 +98,7 @@ def bert_model():
     save_model(bert_classifier)
 
     # only for dev purposes
-    # print('##################################################### testing model...')
+    print('##################################################### testing model...')
     test_model(bert_classifier)
     
 

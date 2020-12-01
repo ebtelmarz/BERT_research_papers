@@ -4,7 +4,7 @@ import model
 
 
 def run_model():
-    # only for dev purp
+    # only for dev purposes, choose the desired size
     os.system('head -101 data/raw-data.csv > data/raw-data_part.csv')
     print('##################################################### generating raw dataset...')
     datagen.tag_based_datagen()
