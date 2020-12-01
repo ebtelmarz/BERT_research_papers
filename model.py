@@ -41,7 +41,8 @@ def test_model(classifier):
 def bert_model():
     test, test_labels, train, train_labels, validation, validation_labels = datagen.prepare_data()
 
-    print(type(train_labels))
+    # print(type(train_labels))
+    print('##################################################### loading bert model...')
 
     bert_config_file = os.path.join(config.bert_folder, "bert_config.json")
     config_dict = json.loads(tf.io.gfile.GFile(bert_config_file).read())
@@ -50,8 +51,9 @@ def bert_model():
 
     print(config_dict)
 
+    # binary classifier
     bert_classifier, bert_encoder = bert.bert_models.classifier_model(
-        bert_config, num_labels=3)
+        bert_config, num_labels=2)
 
     train_data_size = len(test_labels)
     steps_per_epoch = int(train_data_size / config.batch_size)
@@ -76,6 +78,8 @@ def bert_model():
         if count == 10:
             break
     """
+    print('##################################################### training model...')
+
     bert_classifier.compile(
         optimizer=optimizer,
         loss=loss,
@@ -90,8 +94,11 @@ def bert_model():
         epochs=config.epochs)
 
     # never tested
+    print('##################################################### saving model...')
     save_model(bert_classifier)
+
     # only for dev purposes
+    # print('##################################################### testing model...')
     test_model(bert_classifier)
     
 

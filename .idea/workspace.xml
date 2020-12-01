@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="06eede18-172d-4616-ad33-995f6d3ddce1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datagen.py" beforeDir="false" afterPath="$PROJECT_DIR$/datagen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dataset/dev.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dev.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dataset/test.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/test.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dataset/train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/train.csv" afterDir="false" />
@@ -59,7 +60,9 @@
       <option name="presentableId" value="Default" />
       <updated>1606647609762</updated>
       <workItem from="1606647611759" duration="10727000" />
-      <workItem from="1606660436000" duration="8016000" />
+      <workItem from="1606660436000" duration="13189000" />
+      <workItem from="1606838259141" duration="963000" />
+      <workItem from="1606845245154" duration="855000" />
     </task>
     <servers />
   </component>

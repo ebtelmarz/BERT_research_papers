@@ -16,20 +16,26 @@ def parse_row(row, line_count):
 
 
 ### VARIABILITY POINT: how to adjust the score?? how many points scale
+# HOW MUCH THIS CHOICE INFLUENCES THE PERFORMANCE??
+# 3 values score creates a majority of 3-labeled examples, seems that the model overfits and tends to label as 3 all the validation examples
+# seems like a binary score is much better
 def get_adjusted_score(score):
     adj_score = 0
     # low similarity
-    if score < 0.3333:
-        adj_score = 3
+    # if score < 0.3333:
+    #    adj_score = 3
 
     # medium similarity
-    if 0.3333 <= score < 0.6666:
-        adj_score = 2
+    # if 0.3333 <= score < 0.6666:
+    #    adj_score = 2
 
     # high similarity
-    if 0.6666 <= score <= 1:
-        adj_score = 1
+    # if 0.6666 <= score <= 1:
+    #    adj_score = 1
     # print(adj_score)
+    if score >= 0.5000:
+        adj_score = 1
+
     return adj_score
 
 
@@ -73,10 +79,10 @@ def tag_based_datagen():
                             id2, title2, citeid2, raw_title2, abstract2, tags2, tag_count2 = parse_row(row2,
                                                                                                        line_count2)
 
-                            # max_len = 512
-                            if len(abstract1.split()) + len(raw_title1.split()) + len(abstract2.split()) + len(
-                                    raw_title2.split()) > 260:
-                                continue
+                            # max_len = 512, do not continue, truncate each sentence
+                            # if len(abstract1.split()) + len(raw_title1.split()) + len(abstract2.split()) + len(
+                            #        raw_title2.split()) > 260:
+                            #    continue
 
                             common_tags = len(list(set(tags1).intersection(set(tags2))))
 
@@ -164,7 +170,13 @@ def split_dataset():
 
 
 def encode_sentence(tokenizer, s):
-    tokens = list(tokenizer.tokenize(s))
+    toks = list(tokenizer.tokenize(s))
+    tokens = toks
+
+    # truncate long sentences to a max of 254 --> 254*2 + 3(2 sep and cls) = 511 sequence length
+    if len(toks) > 254:
+        tokens = toks[:254]
+
     tokens.append('[SEP]')
 
     return tokenizer.convert_tokens_to_ids(tokens)
@@ -203,25 +215,26 @@ def prepare_data():
     dev_df = pd.read_csv(config.dev_path)
     test_df = pd.read_csv(config.test_path)
 
-    print(train_df.head(1))
     # Set up tokenizer to generate Tensorflow dataset
     tokenizer = config.tokenizer
 
     tokenizer.convert_tokens_to_ids(['[CLS]', '[SEP]'])
 
     train = bert_encode(train_df, tokenizer)
-    train_labels_df = train_df['score'].map(lambda x: x[0].isdigit())
+    train_labels_df = train_df['score'].map(lambda x: x != 'score')
     train_labels = train_labels_df.astype('int64')
 
     validation = bert_encode(dev_df, tokenizer)
-    validation_labels = dev_df['score'].astype('int64')
+    dev_labels_df = dev_df['score'].map(lambda x: x != 'score')
+    validation_labels = dev_labels_df.astype('int64')
 
     test = bert_encode(test_df, tokenizer)
-    test_labels = test_df['score'].astype('int64')
+    test_labels_df = test_df['score'].map(lambda x: x != 'score')
+    test_labels = test_labels_df.astype('int64')
 
-    for key, value in test.items():
+    for key, value in train.items():
         print(f'{key:15s} shape: {value.shape}')
 
-    print(f'glue_train_labels shape: {test_labels.shape}')
+    print(f'train_labels shape: {train_labels.shape}')
 
     return test, test_labels, train, train_labels, validation, validation_labels
