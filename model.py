@@ -85,7 +85,7 @@ def bert_model():
         loss=loss,
         metrics=metrics)
 
-    # weird behavior here: tensorflow.python.framework.errors_impl.UnimplementedError:  Cast string to float is not supported
+    # [SOLVED] weird behavior here: tensorflow.python.framework.errors_impl.UnimplementedError:  Cast string to float is not supported
     #          [[node sparse_categorical_crossentropy/Cast (defined at /home/ebt/TESI/bert_nlp/model.py:79) ]] [Op:__inference_train_function_23235]
     bert_classifier.fit(
         train, train_labels,

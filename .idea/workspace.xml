@@ -2,17 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="06eede18-172d-4616-ad33-995f6d3ddce1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/bert_nlp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/bert_nlp.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datagen.py" beforeDir="false" afterPath="$PROJECT_DIR$/datagen.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/dev.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/dev.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/test.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/test.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset/train.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dataset/train.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shuf_dataset.csv" beforeDir="false" afterPath="$PROJECT_DIR$/shuf_dataset.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +46,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -62,7 +61,9 @@
       <workItem from="1606647611759" duration="10727000" />
       <workItem from="1606660436000" duration="13189000" />
       <workItem from="1606838259141" duration="963000" />
-      <workItem from="1606845245154" duration="1695000" />
+      <workItem from="1606845245154" duration="3136000" />
+      <workItem from="1606926313719" duration="2545000" />
+      <workItem from="1607074377579" duration="4775000" />
     </task>
     <servers />
   </component>
@@ -70,9 +71,17 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="2749" y="468" width="251" height="269" key="#Notifications" timestamp="1607074636332">
+      <screen x="1920" y="0" width="1920" height="1200" />
+    </state>
+    <state x="2749" y="468" width="251" height="269" key="#Notifications/67.27.1853.1053/1920.0.1920.1200@1920.0.1920.1200" timestamp="1607074636332" />
     <state x="776" y="311" width="424" height="490" key="FileChooserDialogImpl" timestamp="1606660432636">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="776" y="311" width="424" height="490" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1606660432636" />
+    <state x="482" y="188" width="1022" height="736" key="SettingsEditor" timestamp="1607076900975">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="482" y="188" width="1022" height="736" key="SettingsEditor/67.27.1853.1053/1920.0.1920.1200@67.27.1853.1053" timestamp="1607076900975" />
   </component>
 </project>

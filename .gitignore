@@ -1,7 +1,8 @@
 uncased_L-12_H-768_A-12
 outputs
+data
+bertolino
 dataset.csv
 shuf_dataset.csv
-data/raw-data_part.csv
 dataset/*
 !dataset/.gitkeep

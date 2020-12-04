@@ -192,6 +192,7 @@ def bert_encode(data, tokenizer):
     cls = [tokenizer.convert_tokens_to_ids(['[CLS]'])] * sentence1.shape[0]
     input_word_ids = tf.concat([cls, sentence1, sentence2], axis=-1)
 
+    # WHY ??
     input_mask = tf.ones_like(input_word_ids).to_tensor()
 
     type_cls = tf.zeros_like(cls)
