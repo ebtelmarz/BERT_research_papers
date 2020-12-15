@@ -12,7 +12,19 @@ echo 'downloading dataset...'
 git clone https://github.com/js05212/citeulike-a.git
 mv citeulike-a/ data/
 
-head -501 data/raw-data.csv > data/raw-data_part.csv
+wget https://md-datasets-cache-zipfiles-prod.s3.eu-west-1.amazonaws.com/zm33cdndxs-2.zip
+unzip zm33cdndxs-2.zip
+unzip json-articals.zip
 
-echo 'running...'
-python3 run.py
+rm zm33cdndxs-2.zip
+rm json_scheme.txt
+rm LICENCE.md
+rm change_log.txt
+rm README.md
+rm os-ccby-40k-ids.csv
+rm ELSEVIERCC_BYCORPUS.pdf
+rm json-articals.zip
+
+mkdir dataset
+mkdir shuffled
+mkdir intermediate

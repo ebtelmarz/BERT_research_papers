@@ -27,6 +27,17 @@ execute the run.sh file by running
 ```bash
 sh run.sh
 ```
+to run the code, you have to specify:
+- [N] the number of lines to head from the raw-data file 
+- [TAG/CIT] if you want a tag based dataset input 'TAG', else if you want a co-citations based one input 'CIT'
+```bash
+python3 run.py [N] [TAG/CIT]
+```
+EXAMPLE: this will head the first 100 lines from the raw-data file and make a co-citations based classification
+```bash
+python3 run.py 100 CIT
+```
+##
 
 ### run.sh
 running the run.sh file will execute the following commands:
@@ -50,7 +61,29 @@ git clone https://github.com/js05212/citeulike-a.git
 
 mv citeulike-a/ data/
 ```
-- copy the first [N] lines of the dataset to a new file, you can specify the desired [N] value, the default is 501
+- download the Mendley dataset, unzip it and then remove the unwanted zips and files
+```bash
+wget https://md-datasets-cache-zipfiles-prod.s3.eu-west-1.amazonaws.com/zm33cdndxs-2.zip
+unzip zm33cdndxs-2.zip
+unzip json-articals.zip
+
+rm zm33cdndxs-2.zip
+rm json_scheme.txt
+rm LICENCE.md
+rm change_log.txt
+rm README.md
+rm os-ccby-40k-ids.csv
+rm ELSEVIERCC_BYCORPUS.pdf
+rm json-articals.zip
+```
+- create the directories needed for the execution
+```bash
+mkdir dataset
+mkdir shuffled
+mkdir intermediate
+```
+
+<!-- copy the first [N] lines of the dataset to a new file, you can specify the desired [N] value, the default is 501
 ```bash
 head -[N] data/raw-data.csv > data/raw-data_part.csv
 ```
@@ -58,3 +91,4 @@ head -[N] data/raw-data.csv > data/raw-data_part.csv
 ```bash
 python3 run.py
 ```
+-->

@@ -6,9 +6,9 @@ import tensorflow as tf
 import config
 
 
-def parse_row(row, line_count):
+def parse_row(row, line_count, other):
     id, title, citeid, raw_title, abstract = row[0], row[1], row[2], row[3], row[4]
-    string_values = config.tags_lines[line_count - 1]
+    string_values = other[line_count - 1]
     values_count = int(string_values.split()[0])
     values = string_values.split()[1:]
 
@@ -23,15 +23,15 @@ def get_adjusted_score(score):
     adj_score = 0
     # low similarity
     # if score < 0.3333:
-    #    adj_score = 3
+    #    adj_score = 0
 
     # medium similarity
     # if 0.3333 <= score < 0.6666:
-    #    adj_score = 2
+    #    adj_score = 1
 
     # high similarity
     # if 0.6666 <= score <= 1:
-    #    adj_score = 1
+    #    adj_score = 2
     # print(adj_score)
     if score >= 0.5000:
         adj_score = 1
@@ -51,24 +51,18 @@ def get_score(common_tags, tag_count1, tag_count2):
 
 
 ### VARIABILITY POINT: common tags or citacion network??
-def tag_based_datagen():
-    with open(config.whole_dataset, mode='w') as dataset_file:
-        dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"',
-                                    quoting=csv.QUOTE_MINIMAL)
-
-        dataset_writer.writerow(config.header)
-
-    with open(os.path.join(config.data_dir, config.input_raw_data), encoding='ISO-8859-1') as csv_file1:
+def do_datagen(input_file, output_file, other):
+    with open(os.path.join(config.data_dir, input_file), encoding='ISO-8859-1') as csv_file1:
         csv_reader1 = csv.reader(csv_file1, delimiter=',')
         line_count1 = 0
         for row1 in csv_reader1:
             if line_count1 == 0:
                 line_count1 += 1
             else:
-                id1, title1, citeid1, raw_title1, abstract1, tags1, tag_count1 = parse_row(row1, line_count1)
+                id1, title1, citeid1, raw_title1, abstract1, tags1, tag_count1 = parse_row(row1, line_count1, other)
                 line_count1 += 1
 
-                with open(os.path.join(config.data_dir, config.input_raw_data), encoding='ISO-8859-1') as csv_file2:
+                with open(os.path.join(config.data_dir, input_file), encoding='ISO-8859-1') as csv_file2:
                     csv_reader2 = csv.reader(csv_file2, delimiter=',')
                     line_count2 = 0
                     for row2 in csv_reader2:
@@ -77,18 +71,13 @@ def tag_based_datagen():
                             line_count2 += 1
                         else:
                             id2, title2, citeid2, raw_title2, abstract2, tags2, tag_count2 = parse_row(row2,
-                                                                                                       line_count2)
-
-                            # max_len = 512, do not continue, truncate each sentence
-                            # if len(abstract1.split()) + len(raw_title1.split()) + len(abstract2.split()) + len(
-                            #        raw_title2.split()) > 260:
-                            #    continue
+                                                                                                       line_count2, other)
 
                             common_tags = len(list(set(tags1).intersection(set(tags2))))
 
                             score = get_score(common_tags, tag_count1, tag_count2)
 
-                            with open(config.whole_dataset, mode='a') as dataset_file:
+                            with open(output_file, mode='a') as dataset_file:
                                 dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"',
                                                             quoting=csv.QUOTE_MINIMAL)
 
@@ -99,54 +88,8 @@ def tag_based_datagen():
                             line_count2 += 1
 
 
-def citation_based_datagen():
-    with open(config.whole_dataset_cit, mode='w') as dataset_file:
-        dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"',
-                                    quoting=csv.QUOTE_MINIMAL)
-
-        dataset_writer.writerow(config.header)
-
-    with open(os.path.join(config.data_dir, config.input_raw_data), encoding='ISO-8859-1') as csv_file1:
-        csv_reader1 = csv.reader(csv_file1, delimiter=',')
-        line_count1 = 0
-        for row1 in csv_reader1:
-            if line_count1 == 0:
-                line_count1 += 1
-            else:
-                id1, title1, citeid1, raw_title1, abstract1, cits1, cits_count1 = parse_row(row1, line_count1)
-                line_count1 += 1
-
-                with open(os.path.join(config.data_dir, config.input_raw_data), encoding='ISO-8859-1') as csv_file2:
-                    csv_reader2 = csv.reader(csv_file2, delimiter=',')
-                    line_count2 = 0
-                    for row2 in csv_reader2:
-
-                        if line_count2 == 0:
-                            line_count2 += 1
-                        else:
-                            id2, title2, citeid2, raw_title2, abstract2, cits2, cits_count2 = parse_row(row2,
-                                                                                                        line_count2)
-
-                            if len(abstract1.split()) > 512 or len(abstract2.split()) > 512:
-                                continue
-
-                            common_tags = len(list(set(cits1).intersection(set(cits2))))
-
-                            score = get_score(common_tags, cits_count1, cits_count2)
-
-                            with open(config.whole_dataset_cit, mode='a') as dataset_file:
-                                dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"',
-                                                            quoting=csv.QUOTE_MINIMAL)
-
-                                dataset_writer.writerow(
-                                    [id1, id2, title1 + '. ' + abstract1.lower(), title2 + '. ' + abstract2.lower(),
-                                     score])
-
-                            line_count2 += 1
-
-
-def split_dataset():
-    dataframe = pd.read_csv('shuf_dataset.csv', sep=',', names=config.header)
+def split_dataset(input_file, generation_type):
+    dataframe = pd.read_csv(input_file, sep=',', names=config.header)
     dataframe['split'] = np.random.randn(dataframe.shape[0], 1)
 
     print(dataframe.head(10))
@@ -162,11 +105,15 @@ def split_dataset():
     train = another[take]
     dev = another[~take]
 
-    train.to_csv(config.train_path, sep=',', columns=config.header)
-    test.to_csv(config.test_path, sep=',', columns=config.header)
-    dev.to_csv(config.dev_path, sep=',', columns=config.header)
+    if generation_type == 'TAG':
+        train.to_csv(config.train_path, sep=',')
+        test.to_csv(config.test_path, sep=',')
+        dev.to_csv(config.dev_path, sep=',')
 
-    # print(train.head(10))
+    else:
+        train.to_csv(config.train_path_cit, sep=',')
+        test.to_csv(config.test_path_cit, sep=',')
+        dev.to_csv(config.dev_path_cit, sep=',')
 
 
 def encode_sentence(tokenizer, s):
@@ -211,27 +158,29 @@ def bert_encode(data, tokenizer):
     return inputs
 
 
-def prepare_data():
-    train_df = pd.read_csv(config.train_path)
-    dev_df = pd.read_csv(config.dev_path)
-    test_df = pd.read_csv(config.test_path)
+def prepare_data(keyword):
+    if keyword == 'TAG':
+        train_df = pd.read_csv(config.train_path, sep=',', names=config.header_split, skiprows=1)
+        dev_df = pd.read_csv(config.dev_path, sep=',', names=config.header_split, skiprows=1)
+        test_df = pd.read_csv(config.test_path, sep=',', names=config.header_split, skiprows=1)
+
+    else:
+        train_df = pd.read_csv(config.train_path_cit, sep=',', names=config.header_split, skiprows=1)
+        dev_df = pd.read_csv(config.dev_path_cit, sep=',', names=config.header_split, skiprows=1)
+        test_df = pd.read_csv(config.test_path_cit, sep=',', names=config.header_split, skiprows=1)
 
     # Set up tokenizer to generate Tensorflow dataset
     tokenizer = config.tokenizer
 
-    tokenizer.convert_tokens_to_ids(['[CLS]', '[SEP]'])
-
     train = bert_encode(train_df, tokenizer)
-    train_labels_df = train_df['score'].map(lambda x: x != 'score')
-    train_labels = train_labels_df.astype('int64')
+    # train_labels_df = train_df['score'].map(lambda x: x != 'score')
+    train_labels = train_df['score'].astype('int64')
 
     validation = bert_encode(dev_df, tokenizer)
-    dev_labels_df = dev_df['score'].map(lambda x: x != 'score')
-    validation_labels = dev_labels_df.astype('int64')
+    validation_labels = dev_df['score'].astype('int64')
 
     test = bert_encode(test_df, tokenizer)
-    test_labels_df = test_df['score'].map(lambda x: x != 'score')
-    test_labels = test_labels_df.astype('int64')
+    test_labels = test_df['score'].astype('int64')
 
     for key, value in train.items():
         print(f'{key:15s} shape: {value.shape}')
@@ -239,3 +188,11 @@ def prepare_data():
     print(f'train_labels shape: {train_labels.shape}')
 
     return test, test_labels, train, train_labels, validation, validation_labels
+
+
+"""
+def shuffle_and_write(command, shuffled):
+    os.system(command)
+    os.system('cat shuffled/app.csv >> ' + shuffled)
+    os.system(config.command_remove_app)
+"""

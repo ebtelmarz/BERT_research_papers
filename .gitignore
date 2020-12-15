@@ -2,7 +2,14 @@ uncased_L-12_H-768_A-12
 outputs
 data
 bertolino
-dataset.csv
-shuf_dataset.csv
-dataset/*
-!dataset/.gitkeep
+json
+intermediate
+shuffled
+dataset
+
+# intermediate/*
+# shuffled/*
+# dataset/*
+# !intermediate/.gitkeep
+# !shuffled/.gitkeep
+# !dataset/.gitkeep

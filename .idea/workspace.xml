@@ -2,15 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="06eede18-172d-4616-ad33-995f6d3ddce1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/bert_nlp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/bert_nlp.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/datagen.py" beforeDir="false" afterPath="$PROJECT_DIR$/datagen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/mendley_preparation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/run.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +38,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/tesi_alatino" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -63,7 +63,13 @@
       <workItem from="1606838259141" duration="963000" />
       <workItem from="1606845245154" duration="3136000" />
       <workItem from="1606926313719" duration="2545000" />
-      <workItem from="1607074377579" duration="4775000" />
+      <workItem from="1607074377579" duration="7626000" />
+      <workItem from="1607168132569" duration="43000" />
+      <workItem from="1607446662824" duration="3722000" />
+      <workItem from="1607532543983" duration="2113000" />
+      <workItem from="1607592744456" duration="4958000" />
+      <workItem from="1607611887999" duration="8148000" />
+      <workItem from="1607682314648" duration="21880000" />
     </task>
     <servers />
   </component>
@@ -75,9 +81,11 @@
       <screen x="1920" y="0" width="1920" height="1200" />
     </state>
     <state x="2749" y="468" width="251" height="269" key="#Notifications/67.27.1853.1053/1920.0.1920.1200@1920.0.1920.1200" timestamp="1607074636332" />
-    <state x="776" y="311" width="424" height="490" key="FileChooserDialogImpl" timestamp="1606660432636">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="2655" y="324" width="424" height="490" key="FileChooserDialogImpl" timestamp="1607936366271">
+      <screen x="1920" y="0" width="1920" height="1200" />
     </state>
+    <state x="2655" y="324" width="424" height="490" key="FileChooserDialogImpl/67.27.1853.1053/1920.0.1920.1200@1920.0.1920.1200" timestamp="1607936366271" />
+    <state x="776" y="311" key="FileChooserDialogImpl/67.27.1853.1053/1920.0.1920.1200@67.27.1853.1053" timestamp="1607168173134" />
     <state x="776" y="311" width="424" height="490" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1606660432636" />
     <state x="482" y="188" width="1022" height="736" key="SettingsEditor" timestamp="1607076900975">
       <screen x="67" y="27" width="1853" height="1053" />
