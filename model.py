@@ -2,7 +2,6 @@ import os
 import json
 import datagen
 import config
-import pandas as pd
 
 import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -17,12 +16,12 @@ import official.nlp.bert.configs
 def save_model(classifier):
     tf.saved_model.save(classifier, export_dir=config.export_dir)
 
-
+"""
 def test_model(classifier, other):
 
     ## line count in parse_row does not work with a tail
     tokenizer = config.tokenizer
-    """
+    
     my_examples = datagen.bert_encode(
         data={
             'sentence1': [
@@ -38,10 +37,10 @@ def test_model(classifier, other):
 
     result = tf.argmax(result).numpy()
     print(result)
-    """
-    ## real test
+    
+    # real test
     os.system('tail -100 data/raw-data.csv > data/raw-data_tail.csv')
-    datagen.do_datagen(config.input_test_raw_data, config.test_whole_dataset_cit, other)
+    datagen.do_datagen(config.input_test_raw_data, config.test_whole_dataset, other)
     os.system('shuf data/raw-data_tail.csv -o shuffled/shuf_test_dataset.csv')
 
     test_df = pd.read_csv('shuffled/shuf_test_dataset.csv', sep=',', names=config.header)
@@ -62,6 +61,7 @@ def test_model(classifier, other):
                                        y=test_labels,
                                        batch_size=config.batch_size)
         print(evaluation)
+"""
 
 
 def create_model():
@@ -100,7 +100,7 @@ def fit_bert(classifier, labels, train, train_labels, validation, validation_lab
                                verbose=1,
                                mode='min')
 
-    best_checkpoint = ModelCheckpoint('.best_fit_pre_trained.hdf5',
+    best_checkpoint = ModelCheckpoint('.best_fit.hdf5',
                                       save_best_only=True,
                                       monitor='val_categorical_accuracy',
                                       mode='max')
@@ -131,9 +131,9 @@ def predict_test_set(model, test, test_labels):
     print(evaluation)
 
 
-def bert_model(keyword, other):
+def bert_model():
     # prepare data
-    test, test_labels, train, train_labels, validation, validation_labels = datagen.prepare_data(keyword)
+    test, test_labels, train, train_labels, validation, validation_labels = datagen.prepare_data()
 
     # construct the model
     classifier, encoder = create_model()

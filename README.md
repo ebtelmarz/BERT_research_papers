@@ -3,7 +3,7 @@
 This repo is an attempt to use BERT as a classifier to compute semantic similarity between pairs of research papers represented by their title and abstract concatenated, labeling them as similar or not similar.
 
 ## References
-- [Official Google BERT repo](https://github.com/google-research/bert)
+- [BERT repo](https://github.com/google-research/bert)
 - Paper: [Tag-Aware Document Representation for Research Paper Recommendation](https://www.researchgate.net/publication/343319230_Tag-Aware_Document_Representation_for_Research_Paper_Recommendation)
 - Paper: [BERT: Pre-training of Deep Bidirectional Transformers for
 Language Understanding](https://arxiv.org/pdf/1810.04805.pdf)
@@ -14,6 +14,7 @@ Language Understanding](https://arxiv.org/pdf/1810.04805.pdf)
 - Ubuntu 18.04
 - Python 3.6.9
 
+<!--##Description-->
 ## Usage
 clone or download this repository
 ```bash
@@ -23,19 +24,19 @@ move inside the downloaded folder
 ```bash
 cd BERT_research_papers
 ```
-execute the run.sh file by running  
+execute the prepare_environment.sh file by running  
 ```bash
-sh run.sh
+sh prepare_environment.sh
 ```
 to run the code, you have to specify:
 - [N] the number of lines to head from the raw-data file 
-- [TAG/CIT] if you want a tag based dataset input 'TAG', else if you want a co-citations based one input 'CIT'
+<!--- [TAG/CIT] if you want a tag based dataset input 'TAG', else if you want a co-citations based one input 'CIT'-->
 ```bash
-python3 run.py [N] [TAG/CIT]
+python3 run.py [N]
 ```
-EXAMPLE: this will head the first 100 lines from the raw-data file and make a co-citations based classification
+EXAMPLE: this will head the first 100 lines from the raw-data file
 ```bash
-python3 run.py 100 CIT
+python3 run.py 100
 ```
 ##
 
@@ -47,7 +48,7 @@ running the run.sh file will execute the following commands:
 pip3 install -r requirements.txt
 ```
 
-- download the Bert model from the official repo of google, unzip it and then remove the zip file
+- download the Bert model from the repo, unzip it and then remove the zip file
 ```bash
 wget https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip
 

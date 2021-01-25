@@ -6,36 +6,46 @@ import datagen
 import pandas as pd
 
 
-def prepare_test_data():
-    json_files = os.listdir(config.mendley_data_dir)
+def get_titles(biblio):
+    citations = []
+    for reference in biblio.values():
+        try:
+            citations.append(reference['title'])
+        except TypeError:
+            continue
 
-    for file1 in json_files[:200]:
+    return citations
+
+
+def prepare_data(json_files, output_file):
+
+    for file1 in json_files:
         current1 = json.load(open(config.mendley_data_dir + '/' + file1))
 
-        for file2 in json_files[:200]:
+        for file2 in json_files:
             current2 = json.load(open(config.mendley_data_dir + '/' + file2))
 
             try:
                 number1 = current1['docId']
                 sequence1 = current1['metadata']['title'].lower() + '. ' + current1['abstract'].lower()
-                papers1 = set(current1['bib_entries'].keys())
+                bibs1 = current1['bib_entries']
+                papers1 = set(get_titles(bibs1))
 
                 number2 = current2['docId']
                 sequence2 = current2['metadata']['title'].lower() + '. ' + current2['abstract'].lower()
-                papers2 = set(current2['bib_entries'].keys())
+                bibs2 = current2['bib_entries']
+                papers2 = set(get_titles(bibs2))
             except KeyError:
                 continue
 
             common_cits = len(papers1.intersection(papers2))
             score = datagen.get_score(common_cits, len(papers1), len(papers2))
 
-            with open(config.whole_mendley, mode='a') as test_file:
+            with open(output_file, mode='a') as test_file:
                 test_writer = csv.writer(test_file, delimiter=',', quotechar='"',
                                          quoting=csv.QUOTE_MINIMAL)
 
                 test_writer.writerow([number1, number2, sequence1, sequence2, score])
-
-    os.system(config.command_shuffle_mendley)
 
 
 def run_bert_on_test_data():
@@ -51,7 +61,8 @@ def run_bert_on_test_data():
 
 
 def do_test(classifier):
-    prepare_test_data()
+    prepare_data(config.last_files, config.whole_mendley)
+    os.system(config.command_shuffle_mendley)
     test, labels = run_bert_on_test_data()
 
     evaluation = classifier.evaluate(x=test,
@@ -61,5 +72,6 @@ def do_test(classifier):
 
 
 if __name__ == '__main__':
-    prepare_test_data()
+    prepare_data(config.last_files, config.whole_mendley)
+    os.system(config.command_shuffle_mendley)
     run_bert_on_test_data()
