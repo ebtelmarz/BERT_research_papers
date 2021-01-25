@@ -40,8 +40,8 @@ python3 run.py 100
 ```
 ##
 
-### run.sh
-running the run.sh file will execute the following commands:
+### prepare_environment.sh
+running the prepare_environment.sh file will execute the following commands:
 
 - install all python3 requirements
 ```bash
