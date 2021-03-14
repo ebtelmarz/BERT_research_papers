@@ -1,4 +1,4 @@
-# BERT NLP for research papers
+# Pairwise Document Classification with BERT for Research Paper Recommendation
 
 This repo is an attempt to use BERT as a classifier to compute semantic similarity between pairs of research papers represented by their title and abstract concatenated, labeling them as similar or not similar.
 
@@ -62,7 +62,7 @@ git clone https://github.com/js05212/citeulike-a.git
 
 mv citeulike-a/ data/
 ```
-- download the Mendley dataset, unzip it and then remove the unwanted zips and files
+<!-- - download the Mendley dataset, unzip it and then remove the unwanted zips and files
 ```bash
 wget https://md-datasets-cache-zipfiles-prod.s3.eu-west-1.amazonaws.com/zm33cdndxs-2.zip
 unzip zm33cdndxs-2.zip
@@ -77,6 +77,7 @@ rm os-ccby-40k-ids.csv
 rm ELSEVIERCC_BYCORPUS.pdf
 rm json-articals.zip
 ```
+-->
 - create the directories needed for the execution
 ```bash
 mkdir dataset

@@ -1,7 +1,7 @@
 import os
 import sys
 import datagen
-import mendley_preparation
+# import mendley_preparation
 import model
 import config
 
@@ -9,14 +9,14 @@ import config
 def run_model(number):
     os.system('head -' + number + ' data/raw-data.csv > data/raw-data_part.csv')
 
-    datagen.do_datagen(config.input_raw_data, config.whole_dataset, config.cit_lines)
-    mendley_preparation.prepare_data(config.last_files, config.whole_dataset)
+    datagen.do_datagen(config.input_raw_data, config.intermediate_dataset, config.tag_lines)
+    # mendley_preparation.prepare_data(config.top_files, config.whole_dataset)
     os.system(config.command_shuffle)
     datagen.split_dataset(config.whole_dataset_shuf)
 
-    fitted_bert = model.bert_model()
+    fitted_bert, history = model.bert_model()
 
-    mendley_preparation.do_test(fitted_bert)
+    # mendley_preparation.do_test(fitted_bert, history)
 
 
 if __name__ == '__main__':

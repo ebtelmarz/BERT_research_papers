@@ -5,67 +5,39 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import config
+from scipy import spatial
+import operator
 
 
 def parse_row(row, line_count, other):
+    citations = np.array([0] * config.tags_number)
     id, title, citeid, raw_title, abstract = row[0], row[1], row[2], row[3], row[4]
     string_values = other[line_count - 1]
     values_count = int(string_values.split()[0])
     values = string_values.split()[1:]
 
-    return id, title.strip(), citeid, raw_title.strip(), abstract.strip(), values, values_count
+    for value in values:
+        citations[int(value)] = 1
+
+    return id, title.strip(), citeid, raw_title.strip(), abstract.strip(), citations
 
 
 ### VARIABILITY POINT: how to adjust the score?? how many points scale
 # HOW MUCH THIS CHOICE INFLUENCES THE PERFORMANCE??
 # 3 values score creates a majority of 3-labeled examples, seems that the model overfits and tends to label as 3 all the validation examples
 # seems like a binary score is much better
-def get_adjusted_score(score):
+def get_adjusted_score(score, threshold):
     adj_score = 0
-    """
-    # low similarity
-    # if score < 0.3333:
-    #    adj_score = 0
-
-    # medium similarity
-    # if 0.3333 <= score < 0.6666:
-    #    adj_score = 1
-
-    # high similarity
-    # if 0.6666 <= score <= 1:
-    #    adj_score = 2
-    # print(adj_score)
-   
-    if 0.0 <= score < 0.2:
-        adj_score = 0
-
-    if 0.2 <= score < 0.4:
-        adj_score = 1
-
-    if 0.4 <= score < 0.6:
-        adj_score = 2
-
-    if 0.6 <= score < 0.8:
-        adj_score = 3
-
-    if 0.8 <= score <= 1:
-        adj_score = 4
-    """
-    if score >= 0.5000:
+    if score >= threshold:
         adj_score = 1
 
     return adj_score
 
 
-def get_score(common_tags, tag_count1, tag_count2):
-    try:
-        score = common_tags / min(tag_count1, tag_count2)
-    except ZeroDivisionError:
-        score = 0.0
+def get_score(cits1, cits2):
+    score = 1 - spatial.distance.cosine(cits1, cits2)
 
-    adjusted_score = get_adjusted_score(score)
-
-    return adjusted_score
+    return score
 
 
 ### VARIABILITY POINT: common tags or citation network??
@@ -74,48 +46,98 @@ def clean_text(text):
 
     cleaned_words = [word.replace('{', '') for word in stripped.split()]
     cleaned_words = [word.replace('}', '') for word in cleaned_words]
-    # cleaned_words = [word for word in cleaned_words if word.isalnum()]
     cleaned_text = ' '.join(cleaned_words).lower()
 
-    # cleaned_text = stripped.lower()
-
     return cleaned_text
+
+
+def get_optimal_threshold(scores_df, min_value, max_value):
+    print(scores_df.head())
+
+    mapping = {}
+    for value in np.arange(min_value, max_value, 0.001):
+        zeros = len(scores_df.loc[scores_df['score'].astype('float64') < value])
+        ones = len(scores_df.loc[scores_df['score'].astype('float64') >= value])
+        mapping.update({value: abs(zeros - ones)})
+
+    best = min(mapping.items(), key=operator.itemgetter(1))[0]
+    return best
+
+
+def compute_threshold(input_file, output_file):
+    intermediate_df = pd.read_csv(input_file, sep=',', names=config.header)
+    scores_df = pd.DataFrame(intermediate_df['score'].astype('float64'), columns=['score'])
+    no_ones = pd.DataFrame(scores_df.loc[scores_df['score'].astype('float64') != 0.0])
+    print(no_ones.head())
+    min_value = float(no_ones.min())
+    max_value = float(no_ones.max())
+
+    threshold = get_optimal_threshold(scores_df, min_value, max_value)
+
+    print('min', min_value)
+    print('max', max_value)
+    print('threshold', threshold)
+
+    with open(output_file, mode='a') as dataset_file:
+        dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"',
+                                    quoting=csv.QUOTE_MINIMAL)
+
+        with open(input_file, mode='r') as dataset:
+            dataset_reader = csv.reader(dataset, delimiter=',', quotechar='"',
+                                        quoting=csv.QUOTE_MINIMAL)
+
+            for line in dataset_reader:
+                score = float(line[4])
+                adj = get_adjusted_score(score, threshold)
+                dataset_writer.writerow([line[0], line[1], line[2], line[3], adj])
+
+    # os.system('head -' + str(len(scores) / 2) + ' intermediate/zeros.csv >> intermediate/dataset.csv')
 
 
 def do_datagen(input_file, output_file, other):
     with open(os.path.join(config.data_dir, input_file), encoding='ISO-8859-1') as csv_file1:
         csv_reader1 = csv.reader(csv_file1, delimiter=',')
         line_count1 = 0
+
         for row1 in csv_reader1:
             if line_count1 == 0:
                 line_count1 += 1
-            else:
-                id1, title1, citeid1, raw_title1, abstract1, tags1, tag_count1 = parse_row(row1, line_count1, other)
-                line_count1 += 1
+                continue
 
-                abs1 = clean_text(abstract1)
+            id1, title1, citeid1, raw_title1, abstract1, citations_array1 = parse_row(row1, line_count1, other)
+            line_count1 += 1
 
-                with open(os.path.join(config.data_dir, input_file), encoding='ISO-8859-1') as csv_file2:
-                    csv_reader2 = csv.reader(csv_file2, delimiter=',')
-                    line_count2 = 0
-                    for row2 in csv_reader2:
+            abs1 = clean_text(abstract1)
 
-                        if line_count2 == 0:
-                            line_count2 += 1
-                        else:
-                            id2, title2, citeid2, raw_title2, abstract2, tags2, tag_count2 = parse_row(row2, line_count2, other)
+            with open(os.path.join(config.data_dir, input_file), encoding='ISO-8859-1') as csv_file2:
+                csv_reader2 = csv.reader(csv_file2, delimiter=',')
+                line_count2 = 0
 
-                            common_tags = len(list(set(tags1).intersection(set(tags2))))
-                            # common_tags_union = len(list(set(tags1).union(set(tags2))))
-                            score = get_score(common_tags, tag_count1, tag_count2)
+                for row2 in csv_reader2:
+                    if line_count2 == 0:
+                        line_count2 += 1
+                        continue
 
-                            abs2 = clean_text(abstract2)
+                    id2, title2, citeid2, raw_title2, abstract2, citations_array2 = parse_row(row2, line_count2, other)
 
-                            with open(output_file, mode='a') as dataset_file:
-                                dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-                                dataset_writer.writerow([id1, id2, title1 + '. ' + abs1, title2 + '. ' + abs2, score])
+                    score = get_score(citations_array1, citations_array2)
+                    abs2 = clean_text(abstract2)
 
-                            line_count2 += 1
+                    if score == 0.0:
+                        line_count2 += 1
+                        continue
+
+                    if np.isnan(score):
+                        score = 0.0
+
+                    with open(output_file, mode='a') as dataset_file:
+                        dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"',
+                                                    quoting=csv.QUOTE_MINIMAL)
+                        dataset_writer.writerow([id1, id2, title1 + '. ' + abs1, title2 + '. ' + abs2, score])
+
+                    line_count2 += 1
+
+    compute_threshold(config.intermediate_dataset, config.whole_dataset)
 
 
 def split_dataset(input_file):
@@ -228,5 +250,5 @@ def prepare_data():
     return test, test_labels, train, train_labels, validation, validation_labels
 
 
-# if __name__ == '__main__':
-#    do_datagen(config.input_raw_data, config.whole_dataset, config.cit_lines)
+if __name__ == '__main__':
+    do_datagen(config.input_raw_data, config.whole_dataset, config.tag_lines)
